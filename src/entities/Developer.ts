@@ -2,9 +2,11 @@ import {
   BaseEntity,
   Column,
   Entity,
+  OneToMany,
   PrimaryColumn,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Asset } from "./Asset";
 
 @Entity()
 export class Developer extends BaseEntity {
@@ -14,6 +16,10 @@ export class Developer extends BaseEntity {
   @Column()
   fullname: string;
 
-  @Column()
+  @Column({ default: true })
   active: boolean;
+
+  // Relation with Asset
+  @OneToMany(() => Asset, (asset) => asset.developer)
+  assets: Asset[];
 }
