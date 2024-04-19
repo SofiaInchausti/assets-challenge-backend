@@ -2,7 +2,6 @@ import {
     BaseEntity,
     Column,
     Entity,
-    PrimaryColumn,
     PrimaryGeneratedColumn,
   } from "typeorm";
   
@@ -16,7 +15,7 @@ import {
   
   @Entity()
   export class Asset extends BaseEntity {
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     id: number;
   
     @Column()
