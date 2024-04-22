@@ -1,13 +1,15 @@
 import { Request, Response } from "express-serve-static-core";
 import { User } from "../entities/User";
+import jwt from 'jsonwebtoken';
 
 export const createUser = async (req: Request, res: Response) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, active } = req.body;
 
     const user = new User();
     user.username = username;
     user.password = password;
+    user.active = active;
 
     await user.save();
     res.json(user);
@@ -66,6 +68,31 @@ export const getUser = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "User not found" });
     }
     return res.json(user);
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(500).json({ message: error.message });
+    }
+  }
+};
+
+
+const generateToken = (userId: string) => {
+  return jwt.sign({ userId }, 'clave_secreta', { expiresIn: '1h' });
+};
+
+export const loginUser = async (req: Request, res: Response) => {
+  try {
+    const { username, password } = req.body;
+    const user = await User.findOne({ where: { username } });
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
+    const passwordMatch = password === user.password;
+    if (!passwordMatch) {
+      return res.status(401).json({ message: "Contraseña incorrecta" });
+    }
+    const token = generateToken('user.id');
+    return res.status(200).json({ message: "Inicio de sesión exitoso", token });
   } catch (error) {
     if (error instanceof Error) {
       return res.status(500).json({ message: error.message });
