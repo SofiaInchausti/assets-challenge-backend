@@ -75,7 +75,6 @@ export const getUser = async (req: Request, res: Response) => {
   }
 };
 
-
 const generateToken = (userId: string) => {
   return jwt.sign({ userId }, 'clave_secreta', { expiresIn: '1h' });
 };
@@ -85,14 +84,17 @@ export const loginUser = async (req: Request, res: Response) => {
     const { username, password } = req.body;
     const user = await User.findOne({ where: { username } });
     if (!user) {
-      return res.status(404).json({ message: "Usuario no encontrado" });
+      return res.status(404).json({ message: "User not found" });
+    }
+    if (!user.active) {
+      return res.status(403).json({ message: "User is not active" });
     }
     const passwordMatch = password === user.password;
     if (!passwordMatch) {
-      return res.status(401).json({ message: "Contraseña incorrecta" });
+      return res.status(401).json({ message: "Incorrect password" });
     }
     const token = generateToken('user.id');
-    return res.status(200).json({ message: "Inicio de sesión exitoso", token });
+    return res.status(200).json({ message: "Successful login", token });
   } catch (error) {
     if (error instanceof Error) {
       return res.status(500).json({ message: error.message });
