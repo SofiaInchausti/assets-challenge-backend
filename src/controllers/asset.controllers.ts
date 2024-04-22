@@ -21,9 +21,8 @@ export const createAsset = async (req: Request, res: Response) => {
 };
 
 export const getAssets = async (req: Request, res: Response) => {
-  console.log(9);
   try {
-    const assets = await Asset.find();
+    const assets = await Asset.find({ relations: ['developer'] });
     res.json(assets);
   } catch (error) {
     if (error instanceof Error) {

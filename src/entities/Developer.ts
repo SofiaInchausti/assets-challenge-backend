@@ -2,6 +2,7 @@ import {
   BaseEntity,
   Column,
   Entity,
+  JoinColumn,
   OneToMany,
   PrimaryColumn,
   PrimaryGeneratedColumn,
@@ -20,6 +21,6 @@ export class Developer extends BaseEntity {
   active: boolean;
 
   // Relation with Asset
-  @OneToMany(() => Asset, (asset) => asset.developer)
+  @OneToMany(() => Asset, asset => asset.developer, { cascade: true })
   assets: Asset[];
 }
