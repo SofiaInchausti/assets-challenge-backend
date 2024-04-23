@@ -1,13 +1,26 @@
-import { BaseEntity, Column, Entity, PrimaryColumn } from "typeorm";
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { Asset } from "./Asset";
 
 @Entity()
 export class Developer extends BaseEntity {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
   fullname: string;
 
-  @Column()
+  @Column({ default: true })
   active: boolean;
+
+  // Relation with Asset
+  @OneToMany(() => Asset, asset => asset.developer, { cascade: true })
+  assets: Asset[];
 }
