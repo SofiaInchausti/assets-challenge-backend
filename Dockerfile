@@ -1,6 +1,6 @@
 FROM node:18-bullseye
 
-WORKDIR /assets-backend
+WORKDIR /assets-challenge-backend
 
 COPY . .
 
